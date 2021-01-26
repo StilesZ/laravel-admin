@@ -7,6 +7,7 @@ use Encore\Admin\Controllers\AdminController;
 use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends AdminController
 {
@@ -26,14 +27,19 @@ class UserController extends AdminController
     {
         $grid = new Grid(new User());
 
+        $grid->model()->whereIn('id', ['1','2']);
+
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
         $grid->column('email', __('Email'));
-        $grid->column('email_verified_at', __('Email verified at'));
-        $grid->column('password', __('Password'));
-        $grid->column('remember_token', __('Remember token'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
+
+        $grid->filter(function ($filter) {
+
+            // 设置created_at字段的范围查询
+            $filter->between('created_at', 'Created Time')->datetime();
+        });
 
         return $grid;
     }

@@ -33,7 +33,8 @@ class PermissionController extends AdminController
         $grid->column('name', trans('admin.name'));
 
         $grid->column('http_path', trans('admin.route'))->display(function ($path) {
-            return collect(explode("\n", $path))->map(function ($path) {
+//            explode("\n", $path)
+            return collect($path)->map(function ($path) {
                 $method = $this->http_method ?: ['ANY'];
 
                 if (Str::contains($path, ':')) {
@@ -48,7 +49,7 @@ class PermissionController extends AdminController
                 })->implode('&nbsp;');
 
                 if (!empty(config('admin.route.prefix'))) {
-                    $path = '/'.trim(config('admin.route.prefix'), '/').$path;
+                    $path = '/'.trim(config('admin.route.prefix'), '/').'/'.$path;
                 }
 
                 return "<div style='margin-bottom: 5px;'>$method<code>$path</code></div>";
@@ -85,7 +86,7 @@ class PermissionController extends AdminController
         $show->field('name', trans('admin.name'));
 
         $show->field('http_path', trans('admin.route'))->unescape()->as(function ($path) {
-            return collect(explode("\r\n", $path))->map(function ($path) {
+            return collect($path)->map(function ($path) {
                 $method = $this->http_method ?: ['ANY'];
 
                 if (Str::contains($path, ':')) {
@@ -100,7 +101,7 @@ class PermissionController extends AdminController
                 })->implode('&nbsp;');
 
                 if (!empty(config('admin.route.prefix'))) {
-                    $path = '/'.trim(config('admin.route.prefix'), '/').$path;
+                    $path = '/'.trim(config('admin.route.prefix'), '/').'/'.$path;
                 }
 
                 return "<div style='margin-bottom: 5px;'>$method<code>$path</code></div>";
@@ -121,6 +122,7 @@ class PermissionController extends AdminController
     public function form()
     {
         $permissionModel = config('admin.database.permissions_model');
+        $menuModel = config('admin.database.menu_model');
 
         $form = new Form(new $permissionModel());
 
@@ -132,7 +134,9 @@ class PermissionController extends AdminController
         $form->multipleSelect('http_method', trans('admin.http.method'))
             ->options($this->getHttpMethodsOptions())
             ->help(trans('admin.all_methods_if_empty'));
-        $form->textarea('http_path', trans('admin.http.path'));
+//        $form->textarea('http_path', trans('admin.http.path'));
+
+        $form->multipleSelect('http_path', trans('admin.menu'))->options($menuModel::all()->pluck('title', 'uri'));
 
         $form->display('created_at', trans('admin.created_at'));
         $form->display('updated_at', trans('admin.updated_at'));

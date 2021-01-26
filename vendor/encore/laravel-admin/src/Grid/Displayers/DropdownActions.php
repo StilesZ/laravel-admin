@@ -11,6 +11,7 @@ use Encore\Admin\Grid\Actions\Show;
 class DropdownActions extends Actions
 {
     protected $view = 'admin::grid.actions.dropdown';
+//    protected $view = 'admin::grid.actions.actions';
 
     /**
      * @var array

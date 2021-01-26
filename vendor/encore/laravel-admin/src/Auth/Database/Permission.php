@@ -70,7 +70,7 @@ class Permission extends Model
         $method = $this->http_method;
 
         $matches = array_map(function ($path) use ($method) {
-            $path = trim(config('admin.route.prefix'), '/').$path;
+            $path = trim(config('admin.route.prefix'), '/').'/'.$path;
 
             if (Str::contains($path, ':')) {
                 list($method, $path) = explode(':', $path);
@@ -78,8 +78,8 @@ class Permission extends Model
             }
 
             return compact('method', 'path');
-        }, explode("\n", $this->http_path));
-
+        }, $this->http_path);
+//        explode("\n", $this->http_path)
         foreach ($matches as $match) {
             if ($this->matchRequest($match, $request)) {
                 return true;
@@ -96,9 +96,18 @@ class Permission extends Model
      *
      * @return mixed
      */
+    public function setHttpPathAttribute($value)
+    {
+        $this->attributes['http_path'] = implode(PHP_EOL, $value);
+    }
+
     public function getHttpPathAttribute($path)
     {
-        return str_replace("\r\n", "\n", $path);
+//        return str_replace(PHP_EOL, "\n", $path);
+//        if (is_string($path)) {
+            return array_filter(explode(PHP_EOL, $path));
+//        }
+//        return $path;
     }
 
     /**

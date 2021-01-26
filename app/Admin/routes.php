@@ -13,4 +13,14 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
 
+    $router->resource('users', 'UserController');
+
+    $router->resource('app-configs', 'ConfigController');
+
+    $router->resource('languages', LanguageController::class);
+
+    $router->get('language/change/{id}', 'SettingController@setLanguage');
+
+    $router->match(['get', 'post'],'translate/{id}', 'LanguageController@translate');
 });
+
