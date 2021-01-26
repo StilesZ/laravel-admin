@@ -12,7 +12,8 @@
                 <div class="col-lg-12">
                     <div class="panel">
                         <div class="panel-heading">
-                            <h3 class="panel-title">{{language_data('English To')}} {{$lan_name}}</h3>
+{{--                            <h3 class="panel-title">{{language_data('English To')}} {{$lan_name}}</h3>--}}
+                            <button class="btn btn-success btn-sm pull-left" id="load_more"><i class="fa fa-add"></i> {{language_data('Load More')}}</button>
                             <button class="btn btn-success btn-sm pull-right" type="submit"><i class="fa fa-save"></i> {{language_data('Save')}}</button>
                         </div>
                         <div class="panel-body p-none">
@@ -38,6 +39,16 @@
                 </div>
             </form>
         </div>
-        <a href="#" class="btn btn-success btn-xs" id="load_more">{{language_data('Load More')}}</a>
     </div>
 </section>
+
+<script>
+    $('#load_more').click(function () {
+        $('table').append('' +
+            '<tr>\n' +
+            '<td data-label=""><p><input type="text" class="form-control" required="" name="english_data[]" value=""></p></td>\n' +
+            '<td data-label=""><p><input type="text" class="form-control" required="" name="translate_data[]" value=""></p></td>\n' +
+            '</tr>'
+        )
+    });
+</script>
