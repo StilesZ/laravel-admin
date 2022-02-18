@@ -6,25 +6,44 @@ class Links
     public function __toString()
     {
         return <<<HTML
-            <li class="dropdown bar-notification">
-                <a href="#" class="dropdown-toggle text-success" data-toggle="dropdown" role="button"
-                   aria-expanded="false">
-                    <img src="<?php echo asset('img/country_flag/' . \App\Language::find(app_config('Language'))->icon); ?>" alt="Language">
-                </a>
-                <ul class="dropdown-menu lang-dropdown arrow right-arrow" role="menu">
-                    @foreach(get_language() as $lan)
-                        <li>
-                            <a href="{{url('language/change/'.$lan->id)}}"
-                               @if($lan->id==app_config('Language')) class="text-complete" @endif>
-                                <img class="user-thumb"
-                                     src="<?php echo asset('img/country_flag/' . $lan->icon); ?>"
-                                     alt="user thumb">
-                                <div class="user-name">{{$lan->language}}</div>
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
-            </li>
+
+<!--<audio style="display:none; height: 0" id="bg-music" preload="auto" src="http://fjdx.sc.chinaz.com/Files/DownLoad/sound1/201511/6571.mp3" loop="loop"></audio>-->
+
+<li>
+    <a href="">
+      <i class="fa fa-bell-o"></i>
+      <span class="label label-warning" id="inventory"></span>
+    </a>
+</li>
+
+<script>
+
+    var getting = {
+        url:'/inventory',
+        dataType:"json",
+        success:function(res) {
+          if(res.code == 200){
+              toastr.options.timeOut=120000; // 保存2分钟
+                toastr.warning(res.msg); // 提示文字
+                toastr.options.onclick = function(){
+                    location='order';  // 点击跳转页面
+                };
+               // var audio = document.getElementById('bg-music');  // 启用音频通知
+               //  audio.play();
+               //  setTimeout(function(){
+               //      audio.load(); // 1.5秒后关闭音频通知
+               //  },1500);
+          }
+          $('#inventory').html(res.re);
+        },
+        error: function (res) {
+            console.log(res);
+        }
+    };
+    window.setInterval(function() {
+      $.ajax(getting)
+    },5000);
+</script>
 
 HTML;
     }
