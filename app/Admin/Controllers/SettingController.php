@@ -5,6 +5,7 @@ use App\AppConfig;
 use App\Language;
 use Encore\Admin\Controllers\AdminController;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Session;
 
 class SettingController extends AdminController
 {
@@ -22,6 +23,7 @@ class SettingController extends AdminController
         $lang = Language::find($id);
         if ($lang) {
             App::setLocale($lang->language_code);
+            Session::put('language',$lang->language_code);
             AppConfig::where('name', '=', 'Language')->update(['value' => $id]);
             return redirect('/admin')->with([
                 'message' => language_data('Language updated Successfully')
